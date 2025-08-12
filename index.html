@@ -3,29 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Bitville Sales CRM (Static Demo)</title>
+  <title>Bitville Sales CRM</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 text-gray-800">
+  <!-- Header -->
   <header class="flex items-center justify-between p-4 bg-white shadow">
     <div class="flex items-center space-x-3">
       <div class="w-10 h-10 rounded-full bg-cyan-600"></div>
       <h1 class="text-2xl font-bold text-slate-800">Bitville Sales CRM</h1>
       <span id="currentUser" class="ml-4 text-sm text-slate-500"></span>
     </div>
-    <div class="flex items-center space-x-3">
-      <div class="flex items-center space-x-2">
-        <button id="btnAssigned" class="px-3 py-1 rounded bg-red-600 text-white text-sm">
-          Assigned <span id="badgeAssigned" class="ml-1 inline-block px-2 rounded bg-white text-red-700">0</span>
-        </button>
-        <button id="btnMentioned" class="px-3 py-1 rounded bg-amber-600 text-white text-sm">
-          Mentioned <span id="badgeMentioned" class="ml-1 inline-block px-2 rounded bg-white text-amber-800">0</span>
-        </button>
-      </div>
+    <div class="flex items-center space-x-2">
+      <button id="btnAssigned" class="px-3 py-1 rounded bg-red-600 text-white text-sm">
+        Assigned <span id="badgeAssigned" class="ml-1 inline-block px-2 rounded bg-white text-red-700">0</span>
+      </button>
+      <button id="btnMentioned" class="px-3 py-1 rounded bg-amber-600 text-white text-sm">
+        Mentioned <span id="badgeMentioned" class="ml-1 inline-block px-2 rounded bg-white text-amber-800">0</span>
+      </button>
       <button id="btnMyTags" class="px-3 py-1 rounded bg-slate-800 text-white text-sm">My tags</button>
+      <button id="btnSearch" class="px-3 py-1 rounded bg-cyan-700 text-white text-sm">Search</button>
     </div>
   </header>
 
+  <!-- Filters row -->
   <section class="p-4 bg-white shadow-sm">
     <div class="flex items-center gap-3 flex-wrap">
       <label class="text-sm text-slate-600">Type:</label>
@@ -48,6 +49,7 @@
     </div>
   </section>
 
+  <!-- Pipeline board -->
   <main class="p-4 grid grid-cols-1 md:grid-cols-4 gap-4">
     <div class="col bg-white rounded-lg shadow p-3">
       <h2 class="font-semibold mb-2">New</h2>
@@ -66,6 +68,121 @@
       <div id="col-closed" class="h-full min-h-[200px] space-y-2" data-stage="Closed"></div>
     </div>
   </main>
+
+  <!-- My Tags Drawer -->
+  <div id="drawer" class="fixed right-0 top-0 h-full w-full md:w-[420px] bg-white shadow-2xl translate-x-full transition-transform">
+    <div class="p-4 border-b flex items-center justify-between">
+      <h3 class="font-semibold">My Tags</h3>
+      <button id="closeDrawer" class="text-slate-500 hover:text-slate-900">✕</button>
+    </div>
+    <div class="p-3">
+      <div class="flex gap-2 mb-3">
+        <button data-tab="Assigned" class="tabBtn px-3 py-1 rounded bg-red-600 text-white text-sm">Assigned</button>
+        <button data-tab="Mentioned" class="tabBtn px-3 py-1 rounded bg-amber-600 text-white text-sm">Mentioned</button>
+        <button data-tab="All" class="tabBtn px-3 py-1 rounded bg-slate-800 text-white text-sm">All</button>
+      </div>
+      <div id="tagList" class="space-y-2 text-sm"></div>
+    </div>
+  </div>
+
+  <!-- Search / All Deals Panel -->
+  <div id="searchPanel" class="fixed left-1/2 -translate-x-1/2 top-16 w-[95%] md:w-[800px] bg-white shadow-2xl rounded-lg border hidden">
+    <div class="p-4 border-b flex items-center justify-between">
+      <div class="font-semibold">All deals</div>
+      <button id="closeSearch" class="text-slate-500 hover:text-slate-900">✕</button>
+    </div>
+    <div class="p-3 flex gap-2 items-center">
+      <input id="searchText" class="border rounded px-2 py-1 w-full" placeholder="Search by title, contact, notes..."/>
+      <label class="text-sm text-slate-600">Stage:</label>
+      <select id="searchStage" class="border rounded px-2 py-1">
+        <option value="Any">Any</option>
+        <option>New</option>
+        <option>In Progress</option>
+        <option>Follow-Up</option>
+        <option>Closed</option>
+      </select>
+    </div>
+    <div id="searchResults" class="p-3 max-h-[60vh] overflow-auto text-sm"></div>
+  </div>
+
+  <!-- Add/Edit Deal Modal -->
+  <div id="modal" class="fixed inset-0 bg-black/30 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-3xl">
+      <div class="p-4 border-b flex items-center justify-between">
+        <h3 id="modalTitle" class="font-semibold">New Deal</h3>
+        <button id="closeModal" class="text-slate-500 hover:text-slate-900">✕</button>
+      </div>
+      <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+        <div>
+          <label class="block text-slate-600">Company / Opportunity</label>
+          <input id="f_title" class="w-full border rounded px-2 py-1" placeholder="Company or title"/>
+        </div>
+        <div>
+          <label class="block text-slate-600">Type</label>
+          <select id="f_type" class="w-full border rounded px-2 py-1">
+            <option>Operator</option>
+            <option>Provider</option>
+            <option>Aggregator</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-slate-600">Stage</label>
+          <select id="f_stage" class="w-full border rounded px-2 py-1">
+            <option>New</option>
+            <option>In Progress</option>
+            <option>Follow-Up</option>
+            <option>Closed</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-slate-600">Priority</label>
+          <select id="f_priority" class="w-full border rounded px-2 py-1">
+            <option>Normal</option>
+            <option>URGENT</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-slate-600">Contact Name</label>
+          <input id="f_contactName" class="w-full border rounded px-2 py-1"/>
+        </div>
+        <div>
+          <label class="block text-slate-600">Contact Email</label>
+          <input id="f_contactEmail" class="w-full border rounded px-2 py-1"/>
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-slate-600">Website</label>
+          <input id="f_contactSite" class="w-full border rounded px-2 py-1" placeholder="https://"/>
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-slate-600">Notes / Opportunity</label>
+          <textarea id="f_notes" class="w-full border rounded px-2 py-1" rows="3"></textarea>
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-slate-600">To-do / Next Step</label>
+          <input id="f_todo" class="w-full border rounded px-2 py-1" placeholder="Next action"/>
+        </div>
+        <div>
+          <label class="block text-slate-600">Reminder Date</label>
+          <input id="f_remind" type="date" class="w-full border rounded px-2 py-1"/>
+        </div>
+        <div>
+          <label class="block text-slate-600">Assign (emails, comma separated)</label>
+          <input id="f_assigned" class="w-full border rounded px-2 py-1" placeholder="andrew@bitvillegaming.com"/>
+        </div>
+        <div>
+          <label class="block text-slate-600">Mention (emails, comma separated)</label>
+          <input id="f_mentioned" class="w-full border rounded px-2 py-1" placeholder="sharon@bitvillegaming.com"/>
+        </div>
+      </div>
+      <div class="p-4 border-t flex justify-between gap-2">
+        <button id="btnDelete" class="px-4 py-2 rounded bg-red-100 text-red-700 hidden">Delete</button>
+        <div class="ml-auto">
+          <button id="btnCancel" class="px-4 py-2 rounded bg-slate-200 text-slate-700 mr-2">Cancel</button>
+          <button id="btnSave" class="px-4 py-2 rounded bg-cyan-600 text-white">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>
