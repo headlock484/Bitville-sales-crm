@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bitville Sales CRM (Static Demo)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+  <header class="flex items-center justify-between p-4 bg-white shadow">
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 rounded-full bg-cyan-600"></div>
+      <h1 class="text-2xl font-bold text-slate-800">Bitville Sales CRM</h1>
+      <span id="currentUser" class="ml-4 text-sm text-slate-500"></span>
+    </div>
+    <div class="flex items-center space-x-3">
+      <div class="flex items-center space-x-2">
+        <button id="btnAssigned" class="px-3 py-1 rounded bg-red-600 text-white text-sm">
+          Assigned <span id="badgeAssigned" class="ml-1 inline-block px-2 rounded bg-white text-red-700">0</span>
+        </button>
+        <button id="btnMentioned" class="px-3 py-1 rounded bg-amber-600 text-white text-sm">
+          Mentioned <span id="badgeMentioned" class="ml-1 inline-block px-2 rounded bg-white text-amber-800">0</span>
+        </button>
+      </div>
+      <button id="btnMyTags" class="px-3 py-1 rounded bg-slate-800 text-white text-sm">My tags</button>
+    </div>
+  </header>
+
+  <section class="p-4 bg-white shadow-sm">
+    <div class="flex items-center gap-3 flex-wrap">
+      <label class="text-sm text-slate-600">Type:</label>
+      <div class="flex rounded overflow-hidden border">
+        <button data-type="All" class="typeTab px-3 py-1 bg-cyan-600 text-white">All</button>
+        <button data-type="Operator" class="typeTab px-3 py-1">Operator</button>
+        <button data-type="Provider" class="typeTab px-3 py-1">Provider</button>
+        <button data-type="Aggregator" class="typeTab px-3 py-1">Aggregator</button>
+      </div>
+
+      <label class="text-sm text-slate-600 ml-4">User filter:</label>
+      <select id="userFilter" class="border rounded px-2 py-1">
+        <option value="none">None</option>
+        <option value="owner">Created by me</option>
+        <option value="assigned">Assigned to me</option>
+        <option value="mentioned">Mentioned me</option>
+      </select>
+
+      <button id="btnAddDeal" class="ml-auto px-4 py-2 rounded bg-cyan-600 text-white text-sm">+ Add Deal</button>
+    </div>
+  </section>
+
+  <main class="p-4 grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="col bg-white rounded-lg shadow p-3">
+      <h2 class="font-semibold mb-2">New</h2>
+      <div id="col-new" class="h-full min-h-[200px] space-y-2" data-stage="New"></div>
+    </div>
+    <div class="col bg-white rounded-lg shadow p-3">
+      <h2 class="font-semibold mb-2">In Progress</h2>
+      <div id="col-progress" class="h-full min-h-[200px] space-y-2" data-stage="In Progress"></div>
+    </div>
+    <div class="col bg-white rounded-lg shadow p-3">
+      <h2 class="font-semibold mb-2">Follow-Up</h2>
+      <div id="col-follow" class="h-full min-h-[200px] space-y-2" data-stage="Follow-Up"></div>
+    </div>
+    <div class="col bg-white rounded-lg shadow p-3">
+      <h2 class="font-semibold mb-2">Closed</h2>
+      <div id="col-closed" class="h-full min-h-[200px] space-y-2" data-stage="Closed"></div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
